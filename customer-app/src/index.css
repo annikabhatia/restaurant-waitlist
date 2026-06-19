@@ -1,0 +1,31 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:       #1a1208;
+  --surface:  #26190d;
+  --border:   #3d2e18;
+  --gold:     #c9952a;
+  --gold-lt:  #e8b84b;
+  --cream:    #f5edd8;
+  --muted:    #8a7860;
+  --danger:   #c0392b;
+  --radius:   16px;
+  --font:     'Georgia', serif;
+  --sans:     system-ui, sans-serif;
+}
+
+body {
+  background: var(--bg);
+  color: var(--cream);
+  font-family: var(--sans);
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#root {
+  width: 100%;
+  max-width: 440px;
+  padding: 0 20px 48px;
+}
