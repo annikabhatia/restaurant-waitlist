@@ -128,21 +128,32 @@ export default function App() {
     setErrors({});
     setLoading(true);
     setSubmitError("");
-    try {
-      const res = await fetch(`${API_URL}/waitlist/join`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: form.name.trim(), phone: rawPhone(form.phone), partySize: form.partySize }),
-      });
-      if (!res.ok) throw new Error("Server error");
-      const data = await res.json();
-      setConfirmed({ name: form.name.trim(), position: data.position, phone: form.phone });
-    } catch {
-      // dev fallback — works even if the backend isn't running yet
-      setConfirmed({ name: form.name.trim(), position: Math.floor(Math.random() * 6) + 2, phone: form.phone });
-    } finally {
-      setLoading(false);
+
+  try {
+    const res = await fetch(`${API_URL}/waitlist/join`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: form.name.trim(), phone: rawPhone(form.phone), partySize: form.partySize }),
+    });
+
+    const data = await res.json();
+
+    if (res.status === 409) {
+      setSubmitError("This phone number is already on the waitlist.");
+      return;
     }
+
+    if (!res.ok) {
+      setSubmitError("Something went wrong. Please try again.");
+      return;
+    }
+
+    setConfirmed({ name: form.name.trim(), position: data.position, phone: form.phone });
+  } catch {
+    setSubmitError("Could not connect to the server. Please try again.");
+  } finally {
+    setLoading(false);
+  }
   };
 
   if (confirmed) return <div id="root"><ConfirmationScreen {...confirmed} /></div>;

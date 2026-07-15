@@ -84,7 +84,7 @@ function ActionButton({ label, onClick, variant = "default", disabled }) {
   );
 }
 
-function QueueRow({ entry, index, onSeat, onNotify, onRemove, busy }) {
+function QueueRow({ entry, index, onSeat, onNotify, onRemove, busy, notified }) {
   const isLongWait = (Date.now() - new Date(entry.joined_at).getTime()) / 60000 > 20;
 
   return (
@@ -107,6 +107,11 @@ function QueueRow({ entry, index, onSeat, onNotify, onRemove, busy }) {
             <p style={{ fontSize: 13, color: "var(--muted)", marginTop: 2 }}>
               {formatPhone(entry.phone)} &middot; Party of {entry.party_size}
             </p>
+            {notified && (
+              <p style={{ fontSize: 12, color: "var(--success)", marginTop: 4, fontWeight: 600 }}>
+                ✓ Notified
+              </p>
+            )}
           </div>
         </div>
         <span style={{
@@ -120,7 +125,12 @@ function QueueRow({ entry, index, onSeat, onNotify, onRemove, busy }) {
       </div>
 
       <div style={{ display: "flex", gap: 8 }}>
-        <ActionButton label="Notify" variant="primary" disabled={busy} onClick={() => onNotify(entry.id)} />
+        <ActionButton
+          label={notified ? "Notified ✓" : "Notify"}
+          variant="primary"
+          disabled={busy || notified}
+          onClick={() => onNotify(entry.id)}
+        />
         <ActionButton label="Seat" variant="success" disabled={busy} onClick={() => onSeat(entry.id)} />
         <ActionButton label="Remove" variant="danger" disabled={busy} onClick={() => onRemove(entry.id)} />
       </div>
@@ -132,6 +142,7 @@ export default function App() {
   const [queue, setQueue] = useState([]);
   const [loading, setLoading] = useState(true);
   const [busyId, setBusyId] = useState(null);
+  const [notifiedIds, setNotifiedIds] = useState(new Set());
   const [usingMock, setUsingMock] = useState(false);
 
   const fetchQueue = useCallback(async () => {
@@ -151,7 +162,7 @@ export default function App() {
 
   useEffect(() => {
     fetchQueue();
-    const interval = setInterval(fetchQueue, 10000); // poll every 10s
+    const interval = setInterval(fetchQueue, 10000);
     return () => clearInterval(interval);
   }, [fetchQueue]);
 
@@ -166,11 +177,13 @@ export default function App() {
         setQueue((q) => q.filter((e) => e.id !== id));
       } else if (action === "notify") {
         await fetch(`${API_URL}/waitlist/${id}/notify`, { method: "POST" });
+        setNotifiedIds((prev) => new Set(prev).add(id));
       }
     } catch {
-      // backend not connected yet — simulate locally so UI stays usable
       if (action !== "notify") {
         setQueue((q) => q.filter((e) => e.id !== id));
+      } else {
+        setNotifiedIds((prev) => new Set(prev).add(id));
       }
     } finally {
       setBusyId(null);
@@ -203,6 +216,7 @@ export default function App() {
             entry={entry}
             index={i}
             busy={busyId === entry.id}
+            notified={notifiedIds.has(entry.id)}
             onSeat={(id) => handleAction(id, "seat")}
             onRemove={(id) => handleAction(id, "remove")}
             onNotify={(id) => handleAction(id, "notify")}

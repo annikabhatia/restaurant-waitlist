@@ -18,8 +18,7 @@ router.post('/join', async (req, res) => {
     );
 
     const positionResult = await pool.query(
-      `SELECT COUNT(*) FROM waitlist_entries WHERE status = 'waiting' AND joined_at <= $1`,
-      [result.rows[0].joined_at]
+      `SELECT COUNT(*) FROM waitlist_entries WHERE status = 'waiting'`
     );
 
     res.status(201).json({
