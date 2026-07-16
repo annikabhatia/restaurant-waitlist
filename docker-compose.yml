@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   postgres:
     image: postgres:16
@@ -28,6 +27,32 @@ services:
       - postgres
     volumes:
       - ./backend:/app
+      - /app/node_modules
+
+  customer-app:
+    build: ./customer-app
+    container_name: customer-app
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://localhost:3000
+    depends_on:
+      - backend
+    volumes:
+      - ./customer-app:/app
+      - /app/node_modules
+
+  staff-app:
+    build: ./staff-app
+    container_name: staff-app
+    ports:
+      - "5174:5174"
+    environment:
+      - VITE_API_URL=http://localhost:3000
+    depends_on:
+      - backend
+    volumes:
+      - ./staff-app:/app
       - /app/node_modules
 
 volumes:
