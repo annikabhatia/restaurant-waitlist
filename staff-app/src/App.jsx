@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback } from "react";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
-/* ── mock data so the UI works before backend is fixed ── */
 const MOCK_QUEUE = [
   { id: "1", name: "Maria Garcia", phone: "5551234567", party_size: 3, joined_at: Date.now() - 1000 * 60 * 22 },
   { id: "2", name: "James Chen", phone: "5559876543", party_size: 2, joined_at: Date.now() - 1000 * 60 * 14 },
@@ -28,11 +27,7 @@ function Header({ count }) {
         <h1 style={{ fontSize: 22, fontWeight: 700 }}>Waitlist</h1>
         <p style={{ fontSize: 13, color: "var(--muted)", marginTop: 2 }}>Rosario's &middot; Front of house</p>
       </div>
-      <div style={{
-        background: "var(--primary)", color: "white",
-        borderRadius: 999, padding: "6px 14px",
-        fontSize: 14, fontWeight: 600,
-      }}>
+      <div style={{ background: "var(--primary)", color: "white", borderRadius: 999, padding: "6px 14px", fontSize: 14, fontWeight: 600 }}>
         {count} waiting
       </div>
     </header>
@@ -41,10 +36,7 @@ function Header({ count }) {
 
 function EmptyState() {
   return (
-    <div style={{
-      textAlign: "center", padding: "64px 20px",
-      background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "var(--radius)",
-    }}>
+    <div style={{ textAlign: "center", padding: "64px 20px", background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "var(--radius)" }}>
       <p style={{ fontSize: 17, fontWeight: 600, marginBottom: 6 }}>No one's waiting</p>
       <p style={{ fontSize: 14, color: "var(--muted)" }}>New parties will appear here as they join.</p>
     </div>
@@ -64,14 +56,9 @@ function ActionButton({ label, onClick, variant = "default", disabled }) {
       onClick={onClick}
       disabled={disabled}
       style={{
-        flex: 1,
-        padding: "10px 0",
-        borderRadius: 8,
-        border: `1px solid ${v.border}`,
-        background: v.bg,
-        color: v.color,
-        fontSize: 13,
-        fontWeight: 600,
+        flex: 1, padding: "10px 0", borderRadius: 8,
+        border: `1px solid ${v.border}`, background: v.bg, color: v.color,
+        fontSize: 13, fontWeight: 600,
         cursor: disabled ? "not-allowed" : "pointer",
         opacity: disabled ? 0.5 : 1,
         transition: "opacity 0.15s, transform 0.1s",
@@ -86,20 +73,11 @@ function ActionButton({ label, onClick, variant = "default", disabled }) {
 
 function QueueRow({ entry, index, onSeat, onNotify, onRemove, busy, notified }) {
   const isLongWait = (Date.now() - new Date(entry.joined_at).getTime()) / 60000 > 20;
-
   return (
-    <div style={{
-      background: "var(--surface)", border: "1px solid var(--border)",
-      borderRadius: "var(--radius)", padding: "16px 18px", marginBottom: 10,
-    }}>
+    <div style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "var(--radius)", padding: "16px 18px", marginBottom: 10 }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 12 }}>
         <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
-          <div style={{
-            width: 30, height: 30, borderRadius: 8,
-            background: "#eef2ff", color: "var(--primary)",
-            display: "flex", alignItems: "center", justifyContent: "center",
-            fontSize: 13, fontWeight: 700, flexShrink: 0,
-          }}>
+          <div style={{ width: 30, height: 30, borderRadius: 8, background: "#eef2ff", color: "var(--primary)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 700, flexShrink: 0 }}>
             {index + 1}
           </div>
           <div>
@@ -108,29 +86,16 @@ function QueueRow({ entry, index, onSeat, onNotify, onRemove, busy, notified }) 
               {formatPhone(entry.phone)} &middot; Party of {entry.party_size}
             </p>
             {notified && (
-              <p style={{ fontSize: 12, color: "var(--success)", marginTop: 4, fontWeight: 600 }}>
-                ✓ Notified
-              </p>
+              <p style={{ fontSize: 12, color: "var(--success)", marginTop: 4, fontWeight: 600 }}>✓ Notified</p>
             )}
           </div>
         </div>
-        <span style={{
-          fontSize: 12, fontWeight: 600, padding: "4px 9px", borderRadius: 6,
-          background: isLongWait ? "var(--warn-bg)" : "#f1f3f5",
-          color: isLongWait ? "var(--warn-text)" : "var(--muted)",
-          whiteSpace: "nowrap",
-        }}>
+        <span style={{ fontSize: 12, fontWeight: 600, padding: "4px 9px", borderRadius: 6, background: isLongWait ? "var(--warn-bg)" : "#f1f3f5", color: isLongWait ? "var(--warn-text)" : "var(--muted)", whiteSpace: "nowrap" }}>
           {waitingFor(entry.joined_at)}
         </span>
       </div>
-
       <div style={{ display: "flex", gap: 8 }}>
-        <ActionButton
-          label={notified ? "Notified ✓" : "Notify"}
-          variant="primary"
-          disabled={busy || notified}
-          onClick={() => onNotify(entry.id)}
-        />
+        <ActionButton label={notified ? "Notified ✓" : "Notify"} variant="primary" disabled={busy || notified} onClick={() => onNotify(entry.id)} />
         <ActionButton label="Seat" variant="success" disabled={busy} onClick={() => onSeat(entry.id)} />
         <ActionButton label="Remove" variant="danger" disabled={busy} onClick={() => onRemove(entry.id)} />
       </div>
@@ -138,7 +103,48 @@ function QueueRow({ entry, index, onSeat, onNotify, onRemove, busy, notified }) 
   );
 }
 
+function LoginScreen({ onLogin }) {
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
+  const handleLogin = () => {
+    if (password === "rosarios2024") {
+      onLogin();
+    } else {
+      setError("Incorrect password. Please try again.");
+    }
+  };
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "100dvh", padding: "0 20px" }}>
+      <div style={{ width: "100%", maxWidth: 360, background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "var(--radius)", padding: "32px 28px" }}>
+        <h1 style={{ fontSize: 20, fontWeight: 700, marginBottom: 6 }}>Staff login</h1>
+        <p style={{ fontSize: 13, color: "var(--muted)", marginBottom: 24 }}>Rosario's · Front of house</p>
+        <label style={{ display: "block", fontSize: 12, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--muted)", marginBottom: 8 }}>
+          Password
+        </label>
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && handleLogin()}
+          placeholder="Enter staff password"
+          style={{ width: "100%", padding: "12px 14px", fontSize: 15, background: "var(--bg)", border: "1px solid var(--border)", borderRadius: 8, color: "var(--text)", outline: "none", marginBottom: 12 }}
+        />
+        {error && <p style={{ fontSize: 13, color: "var(--danger)", marginBottom: 12 }}>{error}</p>}
+        <button
+          onClick={handleLogin}
+          style={{ width: "100%", padding: "12px", background: "var(--primary)", color: "white", border: "none", borderRadius: 8, fontSize: 15, fontWeight: 600, cursor: "pointer" }}
+        >
+          Log in
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export default function App() {
+  const [authed, setAuthed] = useState(false);
   const [queue, setQueue] = useState([]);
   const [loading, setLoading] = useState(true);
   const [busyId, setBusyId] = useState(null);
@@ -190,6 +196,8 @@ export default function App() {
     }
   };
 
+  if (!authed) return <LoginScreen onLogin={() => setAuthed(true)} />;
+
   if (loading) {
     return <div id="root"><p style={{ textAlign: "center", color: "var(--muted)", padding: 60 }}>Loading queue…</p></div>;
   }
@@ -197,16 +205,11 @@ export default function App() {
   return (
     <div id="root">
       <Header count={queue.length} />
-
       {usingMock && (
-        <div style={{
-          background: "var(--warn-bg)", color: "var(--warn-text)",
-          fontSize: 13, padding: "10px 14px", borderRadius: 8, marginBottom: 16,
-        }}>
+        <div style={{ background: "var(--warn-bg)", color: "var(--warn-text)", fontSize: 13, padding: "10px 14px", borderRadius: 8, marginBottom: 16 }}>
           Backend not connected — showing sample data for preview.
         </div>
       )}
-
       {queue.length === 0 ? (
         <EmptyState />
       ) : (
