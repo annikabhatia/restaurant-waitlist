@@ -183,12 +183,11 @@ waitlist_entries
 - [x] Containerized with Docker — full stack runs with `docker compose up`
 - [x] Notify button with "Notified ✓" state
 
-### Phase 2: Polish ⬜
-- [ ] Mobile responsiveness testing on real device
-- [ ] Edge case testing (double-click, empty states, concurrency)
-- [ ] Write backend tests for all routes
-- [ ] Update README with screenshots and demo video
-- [ ] Architecture diagram
+### Phase 2: Polish ✅
+- [x] All 7 backend tests passing
+- [x] Screenshots added to README
+- [x] Known limitations documented
+- [x] Setup instructions for running on any device
 
 ### Phase 3: AWS Migration ⬜
 - [ ] Create AWS account
