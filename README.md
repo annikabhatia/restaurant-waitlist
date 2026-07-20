@@ -45,40 +45,53 @@ restaurant-waitlist/
 └── docker-compose.yml   # Runs all 4 services locally
 ```
 
-## Getting Started
+## Running This App on Your Device
 
 ### Prerequisites
-- Docker Desktop
-- Node.js + npm
-- AWS CLI (configured with dummy credentials for local dev)
 
-### Run locally
+Make sure you have the following installed:
 
-Clone the repo and start everything with one command:
+- [Docker Desktop](https://www.docker.com/products/docker-desktop) — required to run all services
+- [Node.js + npm](https://nodejs.org) — LTS version recommended
+- [Git](https://git-scm.com) — to clone the repo
+- [AWS CLI](https://aws.amazon.com/cli/) — configure with dummy credentials for local dev (no real AWS account needed)
+
+### Step 1: Configure AWS CLI (one time only)
+
+```bash
+aws configure set aws_access_key_id local
+aws configure set aws_secret_access_key local
+aws configure set region us-east-1
+```
+
+### Step 2: Clone the repo
+
+```bash
+git clone https://github.com/annikabhatia/restaurant_waitlist.git
+cd restaurant_waitlist
+```
+
+### Step 3: Start everything with Docker
 
 ```bash
 docker compose up --build
 ```
 
-This starts all 4 services:
+This starts all 4 services automatically:
 - PostgreSQL database on port 5432
 - Express backend on port 3000
 - Customer app on port 5173
 - Staff dashboard on port 5174
 
-Then open:
-- Customer join page: http://localhost:5173
-- Staff dashboard: http://localhost:5174
+### Step 4: Create the database table (first time only)
 
-### Create the database table
-
-The first time you run the app, create the waitlist table:
+In a new terminal:
 
 ```bash
 docker exec -it postgres-local psql -U admin -d waitlist
 ```
 
-Then paste:
+Then paste this SQL and press Enter:
 
 ```sql
 CREATE TABLE waitlist_entries (
@@ -91,9 +104,28 @@ CREATE TABLE waitlist_entries (
 );
 ```
 
+Then type `\q` to exit.
+
+### Step 5: Open the app
+
+- **Customer join page:** http://localhost:5173
+- **Staff dashboard:** http://localhost:5174
+
 ### Staff login
 
-Password: `rosarios2024` (replaced with AWS Cognito in Phase 3)
+Password: `rosarios2024`
+
+### Stopping the app
+
+```bash
+docker compose down
+```
+
+### Clearing test data
+
+```bash
+docker exec -it postgres-local psql -U admin -d waitlist -c "DELETE FROM waitlist_entries;"
+```
 
 ## API Routes
 
@@ -117,12 +149,6 @@ waitlist_entries
 ├── status      VARCHAR(20) DEFAULT 'waiting'
 └── joined_at   TIMESTAMP DEFAULT NOW()
 ```
-
-## Development Notes
-
-- SMS notifications are currently stubbed — the backend logs the message to the console instead of sending a real text. Real SMS via Amazon SNS is wired up in Phase 3.
-- Staff auth is a hardcoded password for local dev. AWS Cognito replaces this in Phase 3.
-- The customer confirmation screen shows position at time of joining — live position updates via WebSocket are a planned Phase 3 feature.
 
 ## Roadmap
 
