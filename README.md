@@ -4,6 +4,26 @@ A full-stack digital waitlist system for restaurants. Customers join via a QR co
 
 ## Features
 
+## Screenshots
+
+### Customer join page
+![Customer join page](screenshots/empty_customer_join_page.jpg)
+
+### Customer queue position
+![Queue position](screenshots/position_in_queue.jpg)
+
+### Staff login
+![Staff login](screenshots/staff_login_page.jpg)
+
+### Staff dashboard with queue
+![Staff dashboard](screenshots/ppl_waiting_staff_dashboard.jpg)
+
+### Notified state
+![Notified](screenshots/notified.jpg)
+
+### Empty queue
+![Empty queue](screenshots/empty_staff_dashboard.jpg)
+
 ### Customer
 - Scan a QR code to open the join page on their phone
 - Enter name, phone number, and party size
