@@ -205,7 +205,3 @@ waitlist_entries
 - [ ] End-to-end testing on real AWS infrastructure
 - [ ] Final README with live demo link and architecture diagram
 - [ ] Project write-up for resume and LinkedIn
-
-## About
-
-Built as a self-directed full-stack engineering project to gain hands-on experience with React, Node.js, PostgreSQL, Docker, and AWS. Designed to mirror the kind of work done in a software engineering internship — including git workflow, containerization, API design, and cloud deployment planning.
